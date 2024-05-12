@@ -1,8 +1,11 @@
 package consultas.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
+import java.util.List;
 
 import consultas.model.Consulta;
 import consultas.util.DBConnect;
@@ -30,6 +33,45 @@ public class ConsultaDAO {
             preparedStatement.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+    
+    private static final String SELECT_CONSULTAS_SQL = "SELECT c.Nome, c.Apelido, c.Telefone, c.Placa, v.Vaga, c.Data_Consulta, c.ID_Vaga FROM consultas c JOIN vagas v ON c.ID_Vaga = v.ID_Vaga";
+
+    public List<Consulta> getAllConsultas() {
+        List<Consulta> consultas = new ArrayList<>();
+        try (Connection connection = new DBConnect().connector();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_CONSULTAS_SQL);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                Consulta consulta = new Consulta();
+                consulta.setNomePaciente(resultSet.getString("Nome"));
+                consulta.setApelidoPaciente(resultSet.getString("Apelido"));
+                consulta.setTelefonePaciente(resultSet.getString("Telefone"));
+                consulta.setPlaca(resultSet.getString("Placa"));
+                consulta.setVagas(resultSet.getString("Vaga"));
+                consulta.setDataConsulta(resultSet.getTimestamp("Data_Consulta"));
+                consulta.setIdMedico(resultSet.getInt("ID_Vaga"));
+
+                consultas.add(consulta);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return consultas;
+    }
+    
+    private static final String DELETE_CONSULTA_BY_PLACA_SQL = "DELETE FROM consultas WHERE Placa = ?";
+
+    public void deleteConsultaByPlaca(String placa) {
+        try (Connection connection = new DBConnect().connector();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_CONSULTA_BY_PLACA_SQL)) {
+            preparedStatement.setString(1, placa);
+            preparedStatement.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            // Handle the exception appropriately (e.g., throw a custom DAOException)
         }
     }
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -118,8 +119,24 @@ public class ConsultasServlet extends HttpServlet {
         consultaDAO.inserirConsulta(consulta);
 
         // Redirecionar de volta para a página inicial ou outra página de sucesso
-        response.sendRedirect("index.jsp");
+        response.sendRedirect("ConsultasServlet");
     }
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+    	
+    	
+    	
+        ConsultaDAO consultaDAO = new ConsultaDAO();
+        List<Consulta> consultas = consultaDAO.getAllConsultas();
+
+        System.out.println("Consultas size: " + consultas.size()); // Debugging
+        request.setAttribute("consultas", consultas);
+
+        // Forward request to JSP for rendering
+        request.getRequestDispatcher("consultas.jsp").forward(request, response);
+    }
+
 
 }
 

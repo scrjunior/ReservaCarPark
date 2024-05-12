@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agendamento de Consulta</title>
+  <title>Reservar | ReservaCarPark</title>
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
     .container {
@@ -71,7 +71,7 @@
       </select>
     </div>
     
-    <button type="submit" class="btn btn-primary">Agendar Consulta</button>
+    <button type="submit" class="btn btn-primary">Reservar</button>
   </form>
   
   
